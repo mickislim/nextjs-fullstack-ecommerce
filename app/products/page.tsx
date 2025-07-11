@@ -1,17 +1,20 @@
-import { ProductList } from '@/components/products-list'
-import React from 'react'
-import { stripe } from '@/lib/stripe'
+import { ProductDetail } from "@/components/product-detail";
+import { stripe } from "@/lib/stripe"
 
-export default async function ProductPage(){
-    const products = await stripe.products.list({
-        expand:['data.default_price'],
-    })
-    return(
-        <div>
-        <h1>All Products</h1>
-       
-            <ProductList products={products.data}/>
-        
-        </div>
-    )
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function ProductDetailPage({ params }: PageProps) {
+  const product = await stripe.products.retrieve(params.id, {
+    expand: ['default_price'],
+  });
+
+  return (
+    <div>
+      <ProductDetail product={product} />
+    </div>
+  );
 }
